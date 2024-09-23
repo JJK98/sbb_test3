@@ -23,4 +23,6 @@ public class Article {
     private String content;
 
     private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
 }

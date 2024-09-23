@@ -28,4 +28,11 @@ public class ArticleService {
         Optional<Article> article = this.articleRepository.findById(id);
         return article.get();
     }
+
+    public void modify(Article article, String title, String content){
+        article.setTitle(title);
+        article.setContent(content);
+        article.setModifyDate(LocalDateTime.now());
+        this.articleRepository.save(article);
+    }
 }

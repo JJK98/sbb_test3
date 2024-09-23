@@ -1,8 +1,10 @@
 package com.example.sbb_test4.article;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,13 +24,13 @@ public class ArticleController {
     }
 
     @GetMapping("/create")
-    public String createArticle(){
+    public String createArticle(ArticleForm articleForm){
         return "article_form";
     }
 
     @PostMapping("/create")
-    public String createArticle(@RequestParam("title")String title,@RequestParam("content")String content){
-        this.articleService.create(title, content);
+    public String createArticle(@Valid ArticleForm articleForm, BindingResult bindingResult){
+        this.articleService.create(articleForm.getTitle(), articleForm.getContent());
         return "redirect:/article/list";
     }
 
@@ -38,5 +40,20 @@ public class ArticleController {
         model.addAttribute("article",article);
 
         return "article_detail";
+    }
+    @GetMapping("/modify/{id}")
+    public String articleModify(ArticleForm articleForm, @PathVariable("id")Integer id){
+        Article article = this.articleService.getArticle(id);
+        articleForm.setTitle(article.getTitle());
+        articleForm.setContent(article.getContent());
+
+        return "article_form";
+    }
+
+    @PostMapping("modify/{id}")
+    public String articleModify(@Valid ArticleForm articleForm, BindingResult bindingResult, @PathVariable("id") Integer id){
+        Article article = this.articleService.getArticle(id);
+        this.articleService.modify(article,articleForm.getTitle(), articleForm.getContent());
+        return String.format("redirect:/article/detail/%s", id);
     }
 }
