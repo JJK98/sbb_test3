@@ -34,4 +34,11 @@ public class ArticleController {
         this.articleService.create(title, content);
         return "redirect:/article/list";
     }
+
+    @GetMapping("/detail/{id}")
+    public String detail(@RequestParam("id") Integer id){
+        Article article = this.articleService.getArticle(id);
+
+        return "article_detail";
+    }
 }
